@@ -3,6 +3,7 @@ const AuthRouter = require('./routes/auth.routes')
 const productRouter = require('./routes/product.routes')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const multer = require('multer')
 
 const app = express()
 app.use(cors({

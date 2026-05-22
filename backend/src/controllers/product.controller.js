@@ -26,7 +26,7 @@ async function createProduct(req, res) {
 
 // Get ALl Product 
 
-async function getProduct(req, res) {
+async function getAllProduct(req, res) {
 
     try {
 
