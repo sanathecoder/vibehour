@@ -1,5 +1,8 @@
 const express = require('express')
 const router = express.Router()
+const multer = require('multer')
+const upload = multer({ storage: multer.memoryStorage() })
+
 
 const productController = require('../controllers/product.controller')
 const authMiddleware = require('../middleware/auth.middleware')
@@ -13,8 +16,8 @@ router.get('/:id',productController.getSingleProduct)
 
 // admin Routes 
 
-router.post('/',authMiddleware,admin,productController.createProduct)
-router.put('/:id',authMiddleware,admin,productController.updateProduct)
+router.post('/',authMiddleware,admin,upload.single("image"),productController.createProduct)
+router.put('/:id',authMiddleware,admin,upload.single("image"),productController.updateProduct)
 router.delete('/:id',authMiddleware,admin,productController.deleteProduct)
 
 

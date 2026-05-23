@@ -1,27 +1,38 @@
 const productModel = require('../models/product.model')
-
+const { uploadFile } = require('../services/storage.service');
 // Create Product 
 
 async function createProduct(req, res) {
-
     try {
+        const result = await uploadFile(req.file.buffer)
+        if (!result) {
+            return res.status(400).json({ message: "Product image is required" });
+        }
 
-        const product = await productModel.create(req.body)
+        const product = await productModel.create({
+            title: req.body.title,
+            description: req.body.description,
+            price: req.body.price,
+            image: result.url,
+            brand: req.body.brand,
+            category: req.body.category,
+            stock: req.body.stock,
+            user: req.user.id
+
+        });
+
 
         res.status(201).json({
-            message: " Product Created",
+            message: "Product Created Successfully",
             product
-        })
+        });
 
     } catch (error) {
         res.status(500).json({
-            message: " Server Error",
+            message: "Server Error",
             error: error.message
-        })
-
+        });
     }
-
-
 }
 
 // Get ALl Product 
