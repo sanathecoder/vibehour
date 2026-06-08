@@ -52,9 +52,14 @@ async function placeOrder(req,res){
 
 }
 
-async function getOrder(req,res){
+async function getmyOrder(req,res){
     try {
-        
+        const order = await orderModel.findOne({
+            user: req.user._id,
+        }).populate("products.product").sort({createdAt:-1})
+        res.status(200).json({
+            order
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -62,4 +67,20 @@ async function getOrder(req,res){
     }
 }
 
-module.exports ={placeOrder}
+async function getAllOrder(req,res){
+    try {
+        const orders = await orderModel.find()
+        .populate("user","username email")
+        .populate("products.product")
+        req.status(200).json({
+            orders
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+        
+    }
+}
+
+module.exports ={placeOrder,getmyOrder, getAllOrder}
