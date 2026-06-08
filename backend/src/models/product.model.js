@@ -26,7 +26,9 @@ const productSchema = new mongoose.Schema({
     },
     stock:{
         type:String,
-        default:0
+        required: true,
+        default:0,
+        min: 0
     },
  
 } ,  {timestamps:true})
