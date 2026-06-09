@@ -41,6 +41,61 @@ async function getAllProduct(req, res) {
 
     try {
 
+        const {keyword,category,brand,minPrice,maxPrice,sort,page=1,limit=8} = req.query;
+        let query = {}
+        //Search
+        if(keyword){
+            query.title = {
+                $regex : keyword,
+                $options : "i"
+            }
+        }
+
+        // Catagory
+        if(category){
+            query.category = category
+        }
+
+        //Brand
+        if(brand){
+            query.brand = brand
+        }
+
+        //Price Range
+
+        if(minPrice ||  maxPrice){
+            query.price = {}
+        }
+
+        if(minPrice){
+            query.price.$gte = Number(minPrice)
+        }
+
+        if(maxPrice){
+            query.price.$lte = Number(maxPrice)
+        }
+
+        let productsQuery = productModel.find(query)
+
+        //Sort
+        if(sort === "price-asc"){
+            productsQuery = productsQuery.sort({
+                price: 1
+            })
+        }
+
+        if(sort === "price-desc"){
+            productsQuery = productsQuery.sort({
+                price : -1
+            })
+        }
+
+        if(sort === "latest"){
+            productsQuery = productsQuery.sort({
+                createdAt : -1
+            })
+        }
+
         const product = await productModel.find()
         res.status(200).json({
             message: "fetch All product",
