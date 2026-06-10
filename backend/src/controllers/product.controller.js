@@ -96,10 +96,20 @@ async function getAllProduct(req, res) {
             })
         }
 
-        const product = await productModel.find()
+        // pagination 
+
+        const skip = (page-1) * limit
+        productsQuery = productsQuery.skip(skip).limit(Number(limit))
+        const products = await productsQuery
+        const totalproducts = await productModel.countDocuments(query)
+
+       
         res.status(200).json({
             message: "fetch All product",
-            product
+            totalproducts,
+            currentPage: Number(page),
+            totalPage: Math.ceil(totalproducts/limit),
+            products
         })
 
     } catch (error) {
@@ -191,11 +201,31 @@ async function deleteProduct(req, res) {
     }
 }
 
+async function getFeaturedProducts(req, res) {
+  try {
+
+    const featuredProducts = await productModel.find({
+      featured: true
+    });
+
+    res.status(200).json({
+      featuredProducts
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+}
 
 module.exports = {
     createProduct,
     getAllProduct,
     getSingleProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    getFeaturedProducts
 }

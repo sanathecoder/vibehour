@@ -11,6 +11,7 @@ const admin = require('../middleware/admin.middleware')
 // public Routes
 
 router.get('/',productController.getAllProduct)
+router.get( "/featured",productController.getFeaturedProducts)
 router.get('/:id',productController.getSingleProduct)
 
 
