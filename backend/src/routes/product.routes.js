@@ -14,7 +14,6 @@ router.get('/',productController.getAllProduct)
 router.get( "/featured",productController.getFeaturedProducts)
 router.get('/:id',productController.getSingleProduct)
 
-
 // admin Routes 
 
 router.post('/',authMiddleware,admin,upload.single("image"),productController.createProduct)

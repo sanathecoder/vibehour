@@ -9,6 +9,8 @@ const router = express.Router()
 router.post('/register',authController.Register)
 router.post('/login',authController.Login)
 
-
+router.get("/me", AuthMiddleware, (req, res) => {
+  res.json({ user: req.user });
+});
 
 module.exports = router
