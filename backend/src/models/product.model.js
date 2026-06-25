@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
     title: {
@@ -16,16 +16,18 @@ const productSchema = new mongoose.Schema({
     },
     brand: {
         type: String,
+        default: "VibeHour" // Single store hai toh default brand name fix kar diya
     },
-    catagory: {
+    category: { // Fix: Spelling corrected to 'category'
         type: String,
+        required: true
     },
     price: {
         type: Number,
         required: true
     },
-    stock: {
-        type: String,
+    stock: { // Fix: String se Number kar diya
+        type: Number, 
         required: true,
         default: 0,
         min: 0
@@ -34,10 +36,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
+}, { timestamps: true });
 
-}, { timestamps: true })
-
-
-const productModel = mongoose.model('product', productSchema)
-
-module.exports = productModel
+const productModel = mongoose.model('product', productSchema);
+module.exports = productModel;

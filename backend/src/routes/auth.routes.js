@@ -1,16 +1,16 @@
-const authController = require('../controllers/auth.controller')
-const AuthMiddleware = require('../middleware/auth.middleware')
-const express = require('express')
+const express = require('express');
+const authController = require('../controllers/auth.controller');
+const AuthMiddleware = require('../middleware/auth.middleware');
 
-const router = express.Router()
+const router = express.Router();
 
+router.post('/register', authController.Register);
+router.post('/login', authController.Login);
+router.post('/logout', authController.LogOut); // Added logout route
 
-
-router.post('/register',authController.Register)
-router.post('/login',authController.Login)
-
+// Protected route to get current user data info
 router.get("/me", AuthMiddleware, (req, res) => {
-  res.json({ user: req.user });
+    res.json({ user: req.user });
 });
 
-module.exports = router
+module.exports = router;

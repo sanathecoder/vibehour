@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(
     {
@@ -10,9 +10,14 @@ const orderSchema = new mongoose.Schema(
         products: [{
             product: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "product"
+                ref: "product",
+                required: true
             },
             quantity: {
+                type: Number,
+                required: true
+            },
+            price: { // Fix: Model me price field missing thi, wo add ki
                 type: Number,
                 required: true
             }
@@ -21,8 +26,8 @@ const orderSchema = new mongoose.Schema(
             type: String,
             required: true
         },
-        phone: {
-            type: Number,
+        phone: { // Fix: Number se String kiya taake 03xxxx format barqarar rahe
+            type: String,
             required: true
         },
         totalAmount: {
@@ -31,16 +36,12 @@ const orderSchema = new mongoose.Schema(
         },
         orderStatus: {
             type: String,
-            enum: [
-                "Pending", "Processing", "Shipping", "Delivered", "Cancelled"
-            ],
+            enum: ["Pending", "Processing", "Shipping", "Delivered", "Cancelled"],
             default: "Pending"
         }
     },
     { timestamps: true }
+);
 
-
-)
-const orderModel = mongoose.model("order", orderSchema)
-
-module.exports = orderModel
+const orderModel = mongoose.model("order", orderSchema);
+module.exports = orderModel;

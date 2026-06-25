@@ -7,7 +7,7 @@ async function AddtoCart(req, res) {
     const { product, quantity } = req.body;
     const userId = req.user._id;
 
-    // Validate quantity
+    // Validate quantity input
     if (!quantity || quantity <= 0) {
       return res.status(400).json({
         message: "Quantity must be greater than 0",
@@ -16,19 +16,23 @@ async function AddtoCart(req, res) {
 
     // Check if product exists
     const existingProduct = await productModel.findById(product);
-
     if (!existingProduct) {
       return res.status(404).json({
         message: "Product not found",
       });
     }
 
-    // Find user's cart
-    let cart = await CartModel.findOne({
-      user: userId,
-    });
+    // 🛡️ Single Store Feature: Stock check logic added
+    if (existingProduct.stock < Number(quantity)) {
+      return res.status(400).json({
+        message: `Only ${existingProduct.stock} items left in stock.`,
+      });
+    }
 
-    // Create cart if not exists
+    // Find user's cart
+    let cart = await CartModel.findOne({ user: userId });
+
+    // Create cart if it doesn't exist
     if (!cart) {
       cart = await CartModel.create({
         user: userId,
@@ -52,7 +56,15 @@ async function AddtoCart(req, res) {
     );
 
     if (productIndex > -1) {
-      cart.products[productIndex].quantity += Number(quantity);
+      // 🛡️ Existing item ke liye total quantity ka stock check
+      const totalRequestedQuantity = cart.products[productIndex].quantity + Number(quantity);
+      if (existingProduct.stock < totalRequestedQuantity) {
+        return res.status(400).json({
+          message: `Cannot add more. Maximum available stock is ${existingProduct.stock}.`,
+        });
+      }
+      
+      cart.products[productIndex].quantity = totalRequestedQuantity;
     } else {
       cart.products.push({
         product,
@@ -81,8 +93,9 @@ async function getUserCart(req, res) {
     }).populate("products.product");
 
     if (!cart) {
-      return res.status(404).json({
+      return res.status(200).json({
         message: "Cart is empty",
+        products: []
       });
     }
 

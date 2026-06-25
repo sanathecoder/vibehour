@@ -3,15 +3,14 @@ const mongoose = require('mongoose');
 const cartSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user', // Fix: Match kiya aapke user model name 'user' se
         required: true
     },
-    // Products ko explicit square brackets [] mein rakha hai taake yeh array hi bane
     products: [
         {
             product: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'product',
+                ref: 'product', // Correct: Match ho raha hai aapke product model 'product' se
                 required: true
             },
             quantity: {
@@ -22,7 +21,7 @@ const cartSchema = new mongoose.Schema({
     ]
 }, { timestamps: true });
 
-// Agar pehle se 'cart' model compiled hai, toh use reuse karein warna naya banayein
+// Agar pehle se compiled hai toh use karein warna naya banayein
 const cartModel = mongoose.models.Cart || mongoose.model('cart', cartSchema);
 
 module.exports = cartModel;
