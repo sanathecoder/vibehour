@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   return (
-    <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+    <div className="border pt-4 rounded-xl overflow-hidden shadow hover:shadow-lg transition">
 
       <img
         src={product.image}
