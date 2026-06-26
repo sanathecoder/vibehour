@@ -1,15 +1,14 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Clean Context API integration
+import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const { loading, error } = useSelector(
-    (state) => state.auth
-  );
+  // Local states for clean handling without Redux
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
     email: "",
@@ -18,59 +17,94 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      setLoading(true);
+      setError("");
 
-    const result = await dispatch(login(form));
+      // AuthContext ka login function invoke kiya
+      const data = await login(form.email, form.password);
 
-    if (result?.payload?.user) {
-      navigate("/");
+      // 🛡️ Role-Based Smart Redirection
+      if (data?.user?.role === "admin") {
+        navigate("/admin"); // Admin dashboard par bhejo
+      } else {
+        navigate("/"); // Customer ko home collection par bhejo
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 bg-white">
+      <div className="max-w-sm w-full bg-white p-8 border border-gray-100 rounded-lg shadow-sm">
+        
+        <h2 className="text-2xl font-light tracking-widest text-center uppercase mb-8 text-gray-900">
+          Welcome Back
+        </h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className="p-6 border rounded w-96"
-      >
-
-        <h2 className="text-2xl mb-4">Login</h2>
-
+        {/* Error Alert Display */}
         {error && (
-          <p className="text-red-500 mb-2">
+          <p className="text-xs text-red-500 text-center mb-4 font-light bg-red-50 py-2 rounded">
             {error}
           </p>
         )}
 
-        <input
-          placeholder="Email"
-          className="border p-2 w-full mb-3"
-          value={form.email}
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
-        />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* EMAIL */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              required
+              placeholder="your@email.com"
+              className="w-full px-4 py-3 border border-gray-200 text-sm font-light focus:outline-none focus:border-black rounded transition-colors"
+              value={form.email}
+              onChange={(e) =>
+                setForm({ ...form, email: e.target.value })
+              }
+            />
+          </div>
 
-        <input
-          placeholder="Password"
-          type="password"
-          className="border p-2 w-full mb-3"
-          value={form.password}
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
-        />
+          {/* PASSWORD */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              placeholder="••••••••"
+              className="w-full px-4 py-3 border border-gray-200 text-sm font-light focus:outline-none focus:border-black rounded transition-colors"
+              value={form.password}
+              onChange={(e) =>
+                setForm({ ...form, password: e.target.value })
+              }
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-black text-white w-full p-2"
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+          {/* LOGIN BUTTON */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-black text-white text-xs font-medium uppercase tracking-widest py-4 hover:bg-gray-900 transition-colors rounded disabled:bg-gray-400"
+          >
+            {loading ? "Logging in..." : "Sign In"}
+          </button>
+        </form>
 
-      </form>
+        <p className="text-center text-xs text-gray-500 mt-6 font-light">
+          New to VibeHour?{" "}
+          <Link to="/register" className="underline font-normal text-black">
+            Create account
+          </Link>
+        </p>
 
+      </div>
     </div>
   );
 };

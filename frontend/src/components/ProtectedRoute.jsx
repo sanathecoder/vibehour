@@ -1,23 +1,15 @@
-import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const ProtectedRoute = ({
-  children,
-  roleRequired,
-}) => {
-  const { user, role } = useSelector(
-    (state) => state.auth
-  );
+const ProtectedRoute = ({ children, roleRequired }) => {
+  const { user } = useAuth();
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
-  if (
-    roleRequired &&
-    role !== roleRequired
-  ) {
-    return <Navigate to="/" />;
+  if (roleRequired && user.role !== roleRequired) {
+    return <Navigate to="/" replace />;
   }
 
   return children;

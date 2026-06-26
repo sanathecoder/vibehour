@@ -1,123 +1,124 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { register } from "../features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // Context API integration
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
-  const dispatch = useDispatch();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
-  const { loading, error } = useSelector(
-    (state) => state.auth
-  );
+  // Local states for clean handling
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [form, setForm] = useState({
-    name: "",
+    username: "", // Fixed: Changed from 'name' to 'username' to match backend
     email: "",
     password: "",
-    role: "customer", // 👈 DEFAULT ROLE
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const result = await dispatch(register(form));
-
-    if (result?.payload?.user) {
+    try {
+      setLoading(true);
+      setError("");
+      
+      // Call register function from our Context
+      await register(form.username, form.email, form.password);
+      
+      // Successfully registered -> Send to login page
       navigate("/login");
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-
-      <form
-        onSubmit={handleSubmit}
-        className="p-6 border rounded w-96"
-      >
-
-        <h2 className="text-2xl mb-4">
+    <div className="min-h-[80vh] flex items-center justify-center px-4 bg-white">
+      <div className="max-w-sm w-full bg-white p-8 border border-gray-100 rounded-lg shadow-sm">
+        
+        <h2 className="text-2xl font-light tracking-widest text-center uppercase mb-8 text-gray-900">
           Create Account
         </h2>
 
+        {/* Error Message Alert */}
         {error && (
-          <p className="text-red-500 mb-2">
+          <p className="text-xs text-red-500 text-center mb-4 font-light bg-red-50 py-2 rounded">
             {error}
           </p>
         )}
 
-        {/* NAME */}
-        <input
-          placeholder="Full Name"
-          className="border p-2 w-full mb-3"
-          value={form.name}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              name: e.target.value,
-            })
-          }
-        />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* USERNAME */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-2">
+              Username
+            </label>
+            <input
+              type="text"
+              required
+              placeholder="e.g. JohnDoe"
+              className="w-full px-4 py-3 border border-gray-200 text-sm font-light focus:outline-none focus:border-black rounded transition-colors"
+              value={form.username}
+              onChange={(e) =>
+                setForm({ ...form, username: e.target.value })
+              }
+            />
+          </div>
 
-        {/* EMAIL */}
-        <input
-          placeholder="Email"
-          className="border p-2 w-full mb-3"
-          value={form.email}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              email: e.target.value,
-            })
-          }
-        />
+          {/* EMAIL */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              required
+              placeholder="john@example.com"
+              className="w-full px-4 py-3 border border-gray-200 text-sm font-light focus:outline-none focus:border-black rounded transition-colors"
+              value={form.email}
+              onChange={(e) =>
+                setForm({ ...form, email: e.target.value })
+              }
+            />
+          </div>
 
-        {/* PASSWORD */}
-        <input
-          placeholder="Password"
-          type="password"
-          className="border p-2 w-full mb-3"
-          value={form.password}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              password: e.target.value,
-            })
-          }
-        />
+          {/* PASSWORD */}
+          <div>
+            <label className="block text-xs font-medium uppercase tracking-wider text-gray-500 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              placeholder="••••••••"
+              className="w-full px-4 py-3 border border-gray-200 text-sm font-light focus:outline-none focus:border-black rounded transition-colors"
+              value={form.password}
+              onChange={(e) =>
+                setForm({ ...form, password: e.target.value })
+              }
+            />
+          </div>
 
-        {/* ROLE SELECT */}
-        <select
-          className="border p-2 w-full mb-3"
-          value={form.role}
-          onChange={(e) =>
-            setForm({
-              ...form,
-              role: e.target.value,
-            })
-          }
-        >
-          <option value="customer">
-            Customer
-          </option>
+          {/* SUBMIT BUTTON */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-black text-white text-xs font-medium uppercase tracking-widest py-4 hover:bg-gray-900 transition-colors rounded disabled:bg-gray-400"
+          >
+            {loading ? "Creating Account..." : "Register"}
+          </button>
+        </form>
 
-          <option value="admin">
-            Admin
-          </option>
-        </select>
+        <p className="text-center text-xs text-gray-500 mt-6 font-light">
+          Already have an account?{" "}
+          <Link to="/login" className="underline font-normal text-black">
+            Sign In
+          </Link>
+        </p>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-black text-white w-full p-2"
-        >
-          {loading
-            ? "Creating account..."
-            : "Register"}
-        </button>
-
-      </form>
-
+      </div>
     </div>
   );
 };

@@ -1,26 +1,20 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { loadUser } from "../features/auth/authSlice";
 
 const MainLayout = ({ children }) => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(loadUser());
-  }, [dispatch]);
-
   return (
-    <>
+    <div className="min-h-screen flex flex-col bg-white">
+      {/* Global Brand Navbar */}
       <Navbar />
 
-      <main className="min-h-screen">
+      {/* Dynamic Content Area */}
+      <main className="flex-grow">
         {children}
       </main>
 
+      {/* Global Brand Footer */}
       <Footer />
-    </>
+    </div>
   );
 };
 
