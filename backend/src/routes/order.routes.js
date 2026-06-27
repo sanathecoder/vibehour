@@ -11,5 +11,5 @@ router.get('/', authMiddleware, orderController.getmyOrder);
 
 // Admin Dashboard Route
 router.get('/all-order', authMiddleware, admin, orderController.getAllOrder);
-
+router.put('/:id', authMiddleware, admin, orderController.OrderStatus);
 module.exports = router;

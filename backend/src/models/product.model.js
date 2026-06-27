@@ -20,7 +20,8 @@ const productSchema = new mongoose.Schema({
     },
     category: { // Fix: Spelling corrected to 'category'
         type: String,
-        required: true
+        required: false,
+        default: "Watches"
     },
     price: {
         type: Number,

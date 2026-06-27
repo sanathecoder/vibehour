@@ -57,6 +57,7 @@ async function placeOrder(req, res) {
         });
 
     } catch (error) {
+        console.error("SERVER ERROR DETAILS:", error);
         res.status(500).json({
             message: error.message,
         });
@@ -96,5 +97,15 @@ async function getAllOrder(req, res) {
         });
     }
 }
+ // Update Status of Mange order
+ async function OrderStatus(req,res){
+    const { orderStatus } = req.body;
+    const updatedOrder = await orderModel.findByIdAndUpdate(
+        req.params.id, 
+        { orderStatus }, 
+        { new: true }
+    );
+    res.json(updatedOrder);
+ }
 
-module.exports = { placeOrder, getmyOrder, getAllOrder };
+module.exports = { placeOrder, getmyOrder, getAllOrder , OrderStatus };

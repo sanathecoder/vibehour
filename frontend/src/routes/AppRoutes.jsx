@@ -10,6 +10,10 @@ import Checkout from "../pages/Checkout";
 import Orders from "../pages/Orders";
 import NotFound from "../pages/NotFound";
 import AdminDashboard from '../pages/AdminDashboard'
+import ManageOrders from "../pages/ManageOrders";
+import ManageProducts from "../pages/ManageProducts";
+import AddProduct from "../pages/AddProduct";
+import ProductForm from "../pages/ProductForm";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +40,9 @@ const AppRoutes = () => {
       <Route path="/orders" element={<Orders />} />
 
       <Route path="*" element={<NotFound />} />
+
+
+   
 <Route
   path="/admin"
   element={
@@ -44,6 +51,13 @@ const AppRoutes = () => {
     </ProtectedRoute>
   }
 />
+
+  
+<Route path="/admin/manage-orders" element={<ManageOrders/>} />
+<Route path="/admin/manage-products" element={<ManageProducts/>} />
+<Route path="/admin/add-product" element={<AddProduct/>} />
+<Route path="/admin/edit-product/:id" element={<ProductForm />} />
+
     </Routes>
   );
 };
