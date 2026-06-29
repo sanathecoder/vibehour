@@ -1,19 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Clean Context integration
-import { useCart } from "../context/CartContext";   // Cart counting ke liye
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { cart, clearCartState } = useCart();
   const navigate = useNavigate();
 
-  // Cart me total kitne items hain unka count nikalna
   const cartCount = cart?.products?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   const handleLogout = async () => {
     try {
       await logout();
-      clearCartState(); // Logout par cart local state ko bhi empty karo
+      clearCartState();
       navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err);
@@ -42,7 +41,6 @@ const Navbar = () => {
 
         <Link to="/orders" className="hover:text-black transition-colors">Orders</Link>
 
-        {/* ADMIN LINK - Fixed role path from user object */}
         {user?.role === "admin" && (
           <Link to="/admin" className="text-red-500 font-normal hover:underline">
             Admin
@@ -64,16 +62,21 @@ const Navbar = () => {
             </button>
           </div>
         ) : (
-          <Link 
-            to="/login" 
-            className="bg-black text-white px-4 py-2 rounded-sm hover:bg-gray-900 transition-colors"
-          >
-            Login
-          </Link>
+          /* ADDED REGISTER BUTTON HERE */
+          <div className="flex gap-4 items-center border-l border-gray-200 pl-4">
+            <Link to="/login" className="hover:text-black transition-colors">
+              Login
+            </Link>
+            <Link 
+              to="/register" 
+              className="bg-black text-white px-4 py-2 rounded-sm hover:bg-gray-900 transition-colors"
+            >
+              Register
+            </Link>
+          </div>
         )}
 
       </div>
-
     </nav>
   );
 };
