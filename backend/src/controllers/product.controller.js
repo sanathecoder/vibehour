@@ -9,16 +9,18 @@ async function createProduct(req, res) {
             return res.status(400).json({ message: "Product image is required" });
         }
 
-        // Cleaned: Extra user assignment removed for single-store
+        // Feature ko boolean mein convert karna zaroori hai
+        const isFeatured = req.body.featured === 'true' || req.body.featured === true;
+
         const product = await productModel.create({
             title: req.body.title,
             description: req.body.description,
             price: Number(req.body.price),
             image: result.url,
             brand: req.body.brand || "VibeHour",
-            category: req.body.category,
+            category: req.body.category, // Yeh aapka new field
             stock: Number(req.body.stock),
-            featured: req.body.featured
+            featured: isFeatured // Boolean convert ho gaya
         });
 
         res.status(201).json({
@@ -111,20 +113,59 @@ async function getSingleProduct(req, res) {
 // Update Product (Admin Only)
 async function updateProduct(req, res) {
     try {
-        const product = await productModel.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            { new: true, runValidators: true }
-        );
+        const { id } = req.params;
+        const product = await productModel.findById(id);
+
         if (!product) {
             return res.status(404).json({ message: "Product Not Found" });
         }
+
+        // 1. Title, Description, Category ke liye Safe Update
+        // "undefined" string check karna bohot zaroori hai
+        if (req.body.title && req.body.title !== "undefined") {
+            product.title = req.body.title;
+        }
+
+        if (req.body.description && req.body.description !== "undefined") {
+            product.description = req.body.description;
+        }
+
+   
+
+        // --- FIXED LOGIC HERE ---
+        // Sirf tab update karein agar valid category aayi hai
+        if (req.body.category && req.body.category !== "undefined" && req.body.category !== "") {
+            product.category = req.body.category;
+        }
+
+        // Numbers ke liye
+        if (req.body.price && req.body.price !== "" && req.body.price !== "undefined") {
+            product.price = Number(req.body.price);
+        }
+        
+        if (req.body.stock && req.body.stock !== "" && req.body.stock !== "undefined") {
+            product.stock = Number(req.body.stock);
+        }
+
+        // Boolean (Featured)
+        if (req.body.featured !== undefined) {
+            product.featured = (req.body.featured === 'true' || req.body.featured === true);
+        }
+
+        // Image update
+        if (req.file) {
+            const result = await uploadFile(req.file.buffer);
+            product.image = result.url;
+        }
+
+        await product.save();
         res.status(200).json({ message: "Product Updated Successfully", product });
+        
     } catch (error) {
+        console.error("Update Error:", error);
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 }
-
 // Delete Product (Admin Only)
 async function deleteProduct(req, res) {
     try {
@@ -134,8 +175,9 @@ async function deleteProduct(req, res) {
         }
         res.json({ message: "Product Deleted Successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
+console.log(err);
+    console.log(err.response);
+    console.log(err.response?.data);    }
 }
 
 // Get Featured Products

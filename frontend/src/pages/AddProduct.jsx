@@ -10,7 +10,7 @@ const AddProduct = () => {
         description: "",
         price: "",
         stock: "",
-        category: "Watches",
+        category: "men", // Default value set kar di
         brand: "VibeHour",
         featured: false,
     });
@@ -19,16 +19,15 @@ const AddProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Image aur baqi data ko combine karna
         const data = new FormData();
         data.append("title", formData.title);
         data.append("description", formData.description);
         data.append("price", formData.price);
         data.append("stock", formData.stock);
-        data.append("category", formData.category);
+        data.append("category", formData.category); // Category add ho gayi
         data.append("brand", formData.brand);
         data.append("featured", formData.featured);
-        data.append("image", image); // File object
+        data.append("image", image); 
 
         try {
             await axios.post("http://localhost:3000/api/products", data, {
@@ -36,7 +35,7 @@ const AddProduct = () => {
                 withCredentials: true
             });
             alert("Product Added Successfully! ✨");
-            navigate("/admin/manage-products"); // Redirect to manage page
+            navigate("/admin/manage-products");
         } catch (err) {
             console.error(err);
             alert("Failed to add product. Check console.");
@@ -55,8 +54,8 @@ const AddProduct = () => {
                         <input type="text" className="w-full border border-gray-200 p-3 rounded-sm" onChange={(e) => setFormData({...formData, title: e.target.value})} required />
                     </div>
 
-                    {/* Price & Stock */}
-                    <div className="grid grid-cols-2 gap-4">
+                    {/* Price, Stock & Category (3 grid columns) */}
+                    <div className="grid grid-cols-3 gap-4">
                         <div>
                             <label className="block text-xs text-gray-500 mb-2">Price</label>
                             <input type="number" className="w-full border border-gray-200 p-3 rounded-sm" onChange={(e) => setFormData({...formData, price: e.target.value})} required />
@@ -64,6 +63,19 @@ const AddProduct = () => {
                         <div>
                             <label className="block text-xs text-gray-500 mb-2">Stock</label>
                             <input type="number" className="w-full border border-gray-200 p-3 rounded-sm" onChange={(e) => setFormData({...formData, stock: e.target.value})} required />
+                        </div>
+                        <div>
+                            <label className="block text-xs text-gray-500 mb-2">Category</label>
+                            <select 
+                                className="w-full border border-gray-200 p-3 rounded-sm bg-white" 
+                                value={formData.category}
+                                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                required
+                            >
+                                <option value="men">Men</option>
+                                <option value="women">Women</option>
+                                <option value="kids">Kids</option>
+                            </select>
                         </div>
                     </div>
 

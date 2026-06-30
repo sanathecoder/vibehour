@@ -18,11 +18,11 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: "VibeHour" // Single store hai toh default brand name fix kar diya
     },
-    category: { // Fix: Spelling corrected to 'category'
-        type: String,
-        required: false,
-        default: "Watches"
-    },
+    category: {
+  type: String,
+  enum: ['men', 'women', 'kids'],
+  required: true
+},
     price: {
         type: Number,
         required: true
