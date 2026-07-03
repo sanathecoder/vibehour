@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import { toast } from 'react-toastify';
+
 
 const AddProduct = () => {
     const navigate = useNavigate();
@@ -34,11 +36,11 @@ const AddProduct = () => {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true
             });
-            alert("Product Added Successfully! ✨");
+            toast.success("Product Added Successfully! ✨");
             navigate("/admin/manage-products");
         } catch (err) {
             console.error(err);
-            alert("Failed to add product. Check console.");
+            toast.error("Failed to add product. Check console.");
         }
     };
 

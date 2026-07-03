@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext"; // Context API integration
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from 'react-toastify'
 
 const Register = () => {
   const { register } = useAuth();
@@ -26,6 +27,7 @@ const Register = () => {
       await register(form.username, form.email, form.password);
       
       // Successfully registered -> Send to login page
+      toast.success("Register Successfully")
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed. Try again.");

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; // Link for routing
 import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
+import { toast } from 'react-toastify';
+
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -14,8 +16,10 @@ const ManageProducts = () => {
         try {
             const res = await axios.get("http://localhost:3000/api/products");
             setProducts(Array.isArray(res.data) ? res.data : (res.data.products || []));
+    
         } catch (err) {
-            console.error("Error fetching:", err);
+            // console.error("Error fetching:", err);
+            toast.error("Error fetching:", err)
         }
     };
 
@@ -25,7 +29,7 @@ const ManageProducts = () => {
                 await axios.delete(`http://localhost:3000/api/products/${id}`, { withCredentials: true });
                 setProducts(products.filter(p => p._id !== id)); // Local state update
             } catch (err) {
-                alert("Failed to delete product");
+                toast.error("Failed to delete product");
             }
         }
     };

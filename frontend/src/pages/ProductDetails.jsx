@@ -4,6 +4,7 @@ import axios from "axios";
 import { useCart } from "../context/CartContext";
 import MainLayout from "../layouts/MainLayout";
 import Loader from "../components/Loader";
+import { toast } from 'react-toastify'
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -48,6 +49,7 @@ const ProductDetails = () => {
       
       // 2 seconds baad button wapas normal state me
       setTimeout(() => setAdded(false), 2000);
+      toast.success("Item added to cart")
     } catch (err) {
       console.error("Failed to add to cart:", err);
     } finally {

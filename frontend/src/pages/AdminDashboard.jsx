@@ -1,13 +1,27 @@
+import { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import { Link } from "react-router-dom";
+import API from "../api/axios";
+import { toast } from "react-toastify";
 
 const AdminDashboard = () => {
-  // Yahan aap backend se stats fetch kar ke state mein rakh sakti hain
-  const stats = [
-    { title: "Total Revenue", value: "$12,450" },
-    { title: "Pending Orders", value: "8" },
-    { title: "Total Products", value: "24" },
-  ];
+  const [stats, setStats] = useState({
+    totalRevenue: "$0",
+    pendingOrders: "0",
+    totalProducts: "0"
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await API.get("admin/stats");
+        setStats(res.data);
+      } catch (err) {
+        toast.error("Failed to load dashboard stats");
+      }
+    };
+    fetchStats();
+  }, []);
 
   return (
     <MainLayout>
@@ -18,31 +32,41 @@ const AdminDashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {stats.map((stat, index) => (
-            <div key={index} className="bg-gray-50 p-8 border border-gray-100 rounded-sm">
-              <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-2">{stat.title}</p>
-              <h2 className="text-3xl font-light text-gray-900">{stat.value}</h2>
-            </div>
-          ))}
+          <div className="bg-gray-50 p-8 border border-gray-100 rounded-sm">
+            <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-2">Total Revenue</p>
+            <h2 className="text-3xl font-light text-gray-900">{stats.totalRevenue}</h2>
+          </div>
+          <div className="bg-gray-50 p-8 border border-gray-100 rounded-sm">
+            <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-2">Pending Orders</p>
+            <h2 className="text-3xl font-light text-gray-900">{stats.pendingOrders}</h2>
+          </div>
+          <div className="bg-gray-50 p-8 border border-gray-100 rounded-sm">
+            <p className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-2">Total Products</p>
+            <h2 className="text-3xl font-light text-gray-900">{stats.totalProducts}</h2>
+          </div>
         </div>
 
-        {/* Admin Quick Actions */}
+        {/* Admin Quick Actions - Yahan dono sections majood hain */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          {/* Manage Products Section */}
           <Link 
             to="/admin/manage-products" 
-            className="block p-8 border border-gray-200 hover:border-black transition-colors rounded-sm"
+            className="block p-8 border border-gray-200 hover:border-black hover:bg-gray-50 transition-all duration-300 rounded-sm"
           >
             <h3 className="text-lg font-normal mb-2 uppercase tracking-wide">Manage Products</h3>
             <p className="text-sm font-light text-gray-500">Add, edit, or remove watches from your collection.</p>
           </Link>
 
+          {/* Manage Orders Section */}
           <Link 
             to="/admin/manage-orders" 
-            className="block p-8 border border-gray-200 hover:border-black transition-colors rounded-sm"
+            className="block p-8 border border-gray-200 hover:border-black hover:bg-gray-50 transition-all duration-300 rounded-sm"
           >
-            <h3 className="text-lg font-normal mb-2 uppercase tracking-wide">View Orders</h3>
+            <h3 className="text-lg font-normal mb-2 uppercase tracking-wide">Manage Orders</h3>
             <p className="text-sm font-light text-gray-500">Check pending orders and update shipment status.</p>
           </Link>
+          
         </div>
       </div>
     </MainLayout>

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
+import { toast } from 'react-toastify';
+
 
 const ProductForm = () => {
     const { id } = useParams();
@@ -61,11 +63,11 @@ const ProductForm = () => {
                 }
             );
 
-            alert("Product updated successfully!");
+            toast.success("Product updated successfully!");
             navigate("/admin/manage-products");
         } catch (err) {
             console.error(err);
-            alert("Error updating product");
+            toast.error("Error updating product");
         } finally {
         setLoading(false); // Loading khatam
     }

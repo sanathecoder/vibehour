@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext"; // Clean Context API integration
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const { login } = useAuth();
@@ -26,12 +27,16 @@ const Login = () => {
 
       // 🛡️ Role-Based Smart Redirection
       if (data?.user?.role === "admin") {
+        toast.success("Admin Login Sucessfully")
         navigate("/admin"); // Admin dashboard par bhejo
       } else {
+        toast.success(`User Login Succesfully`)
         navigate("/"); // Customer ko home collection par bhejo
       }
     } catch (err) {
+     
       setError(err.response?.data?.message || "Invalid email or password");
+      toast.error("Invalid email or password")
     } finally {
       setLoading(false);
     }

@@ -15,9 +15,14 @@ import ManageProducts from "../pages/ManageProducts";
 import AddProduct from "../pages/AddProduct";
 import ProductForm from "../pages/ProductForm";
 import Shop from "../pages/Shop";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AppRoutes = () => {
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <Routes>
 
       <Route path="/" element={<Home />} />
@@ -63,6 +68,7 @@ const AppRoutes = () => {
 
 
     </Routes>
+    </>
   );
 };
 

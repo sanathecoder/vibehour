@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -13,10 +14,16 @@ const ManageOrders = () => {
     fetchOrders();
   }, []);
 
-  const fetchOrders = async () => {
+const fetchOrders = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/orders/all-order", { withCredentials: true });
-      setOrders(res.data.orders || res.data);
+      
+      // Ye logic new orders ko top par layega
+      const sortedOrders = (res.data.orders || res.data).sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      
+      setOrders(sortedOrders);
     } catch (err) {
       console.error("Error:", err);
     } finally {
@@ -25,19 +32,20 @@ const ManageOrders = () => {
   };
 
   // Status update karne ka function
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      await axios.put(`http://localhost:3000/api/orders/${orderId}`, 
-        { orderStatus: newStatus }, 
-        { withCredentials: true }
-      );
-      alert("Status updated!");
-      fetchOrders(); // List ko refresh karein
-    } catch (err) {
-      alert("Failed to update status");
-      console.error(err);
-    }
-  };
+ const handleStatusChange = async (orderId, newStatus) => {
+  try {
+    await axios.put(`http://localhost:3000/api/orders/${orderId}`, 
+      { orderStatus: newStatus }, 
+      { withCredentials: true }
+    );
+    
+    toast.success("Order status updated!"); // Professional alert
+    fetchOrders(); 
+  } catch (err) {
+    toast.error("Failed to update status"); // Professional error
+    console.error(err);
+  }
+};
 
   return (
     <MainLayout>
@@ -50,8 +58,8 @@ const ManageOrders = () => {
                
                <div>
                  <p className="text-xs text-gray-400 uppercase tracking-widest">Order #{o._id.slice(-6)}</p>
-                 <p className="text-sm font-medium mt-1">{o.shippingAddress}</p>
-                 <p className="text-xs text-gray-500">{o.phone}</p>
+                 <p className="text-sm font-medium mt-1">Address: {o.shippingAddress}</p>
+                 <p className="text-xs text-gray-500">Phone Number: {o.phone}</p>
                </div>
 
                {/* Status Controller */}

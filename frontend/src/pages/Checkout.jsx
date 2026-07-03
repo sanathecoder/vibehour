@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import MainLayout from "../layouts/MainLayout";
 import { useCart } from "../context/CartContext";
+import { toast } from 'react-toastify'
 
 const Checkout = () => {
   const { cart, clearCartState } = useCart();
@@ -34,12 +35,12 @@ const Checkout = () => {
         withCredentials: true 
       });
 
-      alert("Order placed successfully!");
+      toast.success("Order placed successfully!");
       clearCartState(); // Cart clear karein
       navigate("/orders");
     } catch (err) {
       console.error("Checkout Error:", err);
-      alert("Failed to place order. Check console for error details.");
+      toast.error("Failed to place order. Check console for error details.");
     }
   };
 
