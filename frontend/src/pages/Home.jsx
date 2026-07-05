@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import MainLayout from "../layouts/MainLayout";
 import heroImg from "../assets/imge-watch.jpg";
 import About from "./About";
-import ProductSection from "./ProductSection";
+import ProductsSection from "./ProductsSection";
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import API from "../api/axios";
@@ -60,7 +60,7 @@ const Home = () => {
   }}
   className="relative z-20 bg-white shadow-[-10px_-20px_50px_rgba(0,0,0,0.1)] rounded-t-[50px] pt-10"
 >
-  <ProductSection/>
+  <ProductsSection/>
 </motion.div>
   
 

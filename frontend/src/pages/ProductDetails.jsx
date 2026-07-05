@@ -1,3 +1,5 @@
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -83,24 +85,32 @@ const ProductDetails = () => {
   }
 
   return (
-    <MainLayout>
+   <MainLayout>
       {product && (
         <div className="max-w-6xl mx-auto px-6 py-20">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             
-            {/* PRODUCT IMAGE */}
-            <div className="bg-gray-50 p-8 flex justify-center items-center rounded-sm">
+            {/* PRODUCT IMAGE - Left Side Reveal */}
+            <motion.div 
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="bg-gray-50 p-8 flex justify-center items-center rounded-sm"
+            >
               <img
                 src={product.image}
                 alt={product.title}
                 className="w-full max-w-md object-contain mix-blend-multiply"
               />
-            </div>
+            </motion.div>
 
-            {/* PRODUCT INFO */}
-            <div className="flex flex-col">
-              
-              {/* Category / Brand tags if you have them, else static */}
+            {/* PRODUCT INFO - Right Side Staggered Reveal */}
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              className="flex flex-col"
+            >
               <span className="text-xs font-medium uppercase tracking-widest text-gray-400 mb-4">
                 {product.brand || "Exclusive Collection"}
               </span>
@@ -119,22 +129,22 @@ const ProductDetails = () => {
                 {product.description}
               </p>
 
-              {/* ACTION BUTTON */}
-              <button
+              {/* ACTION BUTTON - Subtle Scale effect */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
                 disabled={isAdding}
                 className={`w-full md:w-auto px-10 py-4 text-xs font-medium uppercase tracking-widest transition-colors rounded-sm
                   ${added 
-                    ? 'bg-green-600 text-white border border-green-600' 
+                    ? 'bg-green-600 text-white' 
                     : 'bg-black text-white hover:bg-gray-900'
-                  } 
-                  ${isAdding ? 'opacity-70 cursor-not-allowed' : ''}
+                  }
                 `}
               >
                 {isAdding ? "Adding..." : added ? "Added to Cart ✓" : "Add To Cart"}
-              </button>
-
-            </div>
+              </motion.button>
+            </motion.div>
           </div>
         </div>
       )}
