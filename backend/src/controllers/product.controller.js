@@ -39,7 +39,7 @@ async function createProduct(req, res) {
 // Get All Products (With Search, Pagination & Filters)
 async function getAllProduct(req, res) {
     try {
-        const { keyword, category, brand, minPrice, maxPrice, sort, page = 1, limit = 8 } = req.query;
+        const { keyword, category, brand, minPrice, maxPrice, sort, page = 1, limit = 12  } = req.query;
         let query = {};
 
         // Search Keyword
@@ -96,6 +96,8 @@ async function getAllProduct(req, res) {
         });
     }
 }
+
+
 
 // Get Single Product
 async function getSingleProduct(req, res) {
@@ -170,14 +172,25 @@ async function updateProduct(req, res) {
 async function deleteProduct(req, res) {
     try {
         const product = await productModel.findByIdAndDelete(req.params.id);
+
         if (!product) {
-            return res.status(404).json({ message: "Product Not Found" });
+            return res.status(404).json({
+                message: "Product Not Found"
+            });
         }
-        res.json({ message: "Product Deleted Successfully" });
+
+        res.status(200).json({
+            message: "Product Deleted Successfully"
+        });
+
     } catch (error) {
-console.log(err);
-    console.log(err.response);
-    console.log(err.response?.data);    }
+        console.error(error);
+
+        res.status(500).json({
+            message: "Server Error",
+            error: error.message
+        });
+    }
 }
 
 // Get Featured Products

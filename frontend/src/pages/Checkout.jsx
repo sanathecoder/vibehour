@@ -68,7 +68,7 @@ const Checkout = () => {
               <input 
                 required
                 className="w-full border border-gray-200 p-3 rounded-sm focus:outline-none"
-                placeholder="Multan"
+                placeholder="City Name"
                 onChange={(e) => setFormData({...formData, city: e.target.value})}
               />
             </div>

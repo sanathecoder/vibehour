@@ -37,8 +37,8 @@ const AddProduct = () => {
                 withCredentials: true
             });
             toast.success("Product Added Successfully! ✨");
-            navigate("/admin/manage-products");
-        } catch (err) {
+// AddProduct page par
+navigate('/admin/manage-products', { state: { refresh: true } });        } catch (err) {
             console.error(err);
             toast.error("Failed to add product. Check console.");
         }

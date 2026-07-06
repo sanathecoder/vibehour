@@ -9,12 +9,19 @@ const Shop = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchAllProducts = async () => {
       try {
         setLoading(true);
-        const res = await API.get("/products");
+        const res = await API.get(
+          `/products?page=${currentPage}&limit=12`
+        );
+
+        setProducts(res.data.products);
+        setTotalPages(res.data.totalPage);
         setProducts(res.data.products);
       } catch (err) {
         setError("Unable to load products at this moment.");
@@ -23,7 +30,7 @@ const Shop = () => {
       }
     };
     fetchAllProducts();
-  }, []);
+  }, [currentPage]);
 
   return (
     <MainLayout>
@@ -42,6 +49,41 @@ const Shop = () => {
             ))}
           </div>
         )}
+        {!loading && totalPages > 1 && (
+  <div className="flex justify-center items-center gap-2 mt-12 flex-wrap">
+
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage(currentPage - 1)}
+      className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-black hover:text-white transition"
+    >
+      Previous
+    </button>
+
+    {[...Array(totalPages)].map((_, index) => (
+      <button
+        key={index}
+        onClick={() => setCurrentPage(index + 1)}
+        className={`px-4 py-2 border rounded transition ${
+          currentPage === index + 1
+            ? "bg-black text-white"
+            : "hover:bg-gray-100"
+        }`}
+      >
+        {index + 1}
+      </button>
+    ))}
+
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage(currentPage + 1)}
+      className="px-4 py-2 border rounded disabled:opacity-50 hover:bg-black hover:text-white transition"
+    >
+      Next
+    </button>
+
+  </div>
+)}
       </div>
     </MainLayout>
   );
