@@ -11,11 +11,12 @@ const app = express()
 
 const allowedOrigins = [
   'http://localhost:5173',                         // Aapka local development url
-  "https://vibehour.vercel.app/"          // Aapka Vercel production url
+  "https://vibehour.vercel.app"          // Aapka Vercel production url
 ];
 
 app.use(cors({
   origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
