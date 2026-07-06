@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import API from "../api/axios";
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -16,7 +17,7 @@ const ManageOrders = () => {
 
 const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/api/orders/all-order", { withCredentials: true });
+      const res = await API.get("orders/all-order", { withCredentials: true });
       
       // Ye logic new orders ko top par layega
       const sortedOrders = (res.data.orders || res.data).sort((a, b) => {
@@ -34,7 +35,7 @@ const fetchOrders = async () => {
   // Status update karne ka function
  const handleStatusChange = async (orderId, newStatus) => {
   try {
-    await axios.put(`http://localhost:3000/api/orders/${orderId}`, 
+    await API.put(`orders/${orderId}`, 
       { orderStatus: newStatus }, 
       { withCredentials: true }
     );

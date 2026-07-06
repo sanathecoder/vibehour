@@ -7,6 +7,7 @@ import { useCart } from "../context/CartContext";
 import MainLayout from "../layouts/MainLayout";
 import Loader from "../components/Loader";
 import { toast } from 'react-toastify'
+import API from '../api/axios';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const ProductDetails = () => {
       try {
         setLoading(true);
         // Direct backend call without Redux
-        const response = await axios.get(`http://localhost:3000/api/products/${id}`);
+        const response = await API.get(`products/${id}`);
         // Ensure you match this with your backend response structure (e.g., response.data.product)
         setProduct(response.data?.product || response.data);
       } catch (err) {

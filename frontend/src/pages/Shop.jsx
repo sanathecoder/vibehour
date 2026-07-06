@@ -17,7 +17,7 @@ const Shop = () => {
       try {
         setLoading(true);
         const res = await API.get(
-          `/products?page=${currentPage}&limit=12`
+          `products?page=${currentPage}&limit=12`
         );
 
         setProducts(res.data.products);

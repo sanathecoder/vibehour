@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import { toast } from 'react-toastify';
+import API from "../api/axios";
 
 
 const ProductForm = () => {
@@ -24,7 +25,7 @@ const ProductForm = () => {
     // Data Fetching
     useEffect(() => {
         if (id) {
-            axios.get(`http://localhost:3000/api/products/${id}`)
+            API.get(`products/${id}`)
                 .then((res) => {
                     setFormData(res.data);
                 })
@@ -51,8 +52,8 @@ const ProductForm = () => {
         }
 
         try {
-            await axios.put(
-                `http://localhost:3000/api/products/${id}`,
+            await API.put(
+                `products/${id}`,
                 
                 data,
                 {

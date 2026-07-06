@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout";
 import axios from "axios";
 import { toast } from 'react-toastify';
 import { useLocation } from "react-router-dom";
+import API from "../api/axios";
 
 
 
@@ -19,8 +20,8 @@ const location = useLocation()
 
    const fetchProducts = async () => {
     try {
-        const res = await axios.get(
-            `http://localhost:3000/api/products?page=${currentPage}&limit=12`
+        const res = await API.get(
+            `products?page=${currentPage}&limit=12`
         );
 
         setProducts(res.data.products);
@@ -34,8 +35,8 @@ const location = useLocation()
    const deleteProduct = async (id) => {
     if (window.confirm("Are you sure?")) {
         try {
-            await axios.delete(
-                `http://localhost:3000/api/products/${id}`,
+            await API.delete(
+                `products/${id}`,
                 { withCredentials: true }
             );
 

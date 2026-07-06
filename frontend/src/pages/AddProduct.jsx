@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import { toast } from 'react-toastify';
+import API from "../api/axios";
 
 
 const AddProduct = () => {
@@ -32,7 +33,7 @@ const AddProduct = () => {
         data.append("image", image); 
 
         try {
-            await axios.post("http://localhost:3000/api/products", data, {
+            await API.post("/products", data, {
                 headers: { "Content-Type": "multipart/form-data" },
                 withCredentials: true
             });

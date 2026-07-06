@@ -4,6 +4,7 @@ import axios from "axios";
 import MainLayout from "../layouts/MainLayout";
 import { useCart } from "../context/CartContext";
 import { toast } from 'react-toastify'
+import API from "../api/axios";
 
 const Checkout = () => {
   const { cart, clearCartState } = useCart();
@@ -31,7 +32,7 @@ const Checkout = () => {
 
     try {
       // 3. Request send karein
-      await axios.post("http://localhost:3000/api/orders", orderData, { 
+      await API.post("/orders", orderData, { 
         withCredentials: true 
       });
 

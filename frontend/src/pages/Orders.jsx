@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MainLayout from "../layouts/MainLayout";
 import { useAuth } from "../context/AuthContext";
+import API from "../api/axios";
 
 const Orders = () => {
   const { user } = useAuth();
@@ -11,7 +12,7 @@ const Orders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/orders", {
+        const res = await API.get("/orders", {
           withCredentials: true,
         });
         // Backend se aaye huye orders set karna
