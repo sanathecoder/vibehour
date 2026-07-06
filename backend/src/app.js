@@ -10,14 +10,19 @@ const cookieParser = require('cookie-parser')
 const app = express()
 
 const allowedOrigins = [
-  'http://localhost:5173',                         // Aapka local development url
-  "https://vibehour.vercel.app"          // Aapka Vercel production url
+  "http://localhost:5173",
+  "https://vibehour.vercel.app"
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 }));
 
 app.use(cookieParser())
