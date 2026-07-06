@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:3000/api" || "vibehour-production.up.railway.app/api",
+  baseURL: "https://vibehour-production.up.railway.app",
   withCredentials: true,
 });
 
